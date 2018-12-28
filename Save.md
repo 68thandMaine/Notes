@@ -21,7 +21,7 @@ This was written using:
   2. [Collecting An Upload](#collecting-an-upload)
   3. [Creating A Database Entry](#creating-a-database-entry)
   4. [Returning An Image From The Database](#returning-images-from-the-database)
-  5. []
+  5. [Displaying An Image on the DOM](#displaying-images-on-the-dom)
 
   ---
 ## SQL Database
@@ -126,7 +126,7 @@ In this block of code we use `CopyTo()` which is a method in the Stream class. I
 
 ---
 ## Returning Images From The Database
-There are probably several ways to return an image when it is stored as a byte array in a database. Write a connection to a database and create an empty list to hold objects returned from the database. This part is standard for returning objects from a database, but we use a method called `GetBytes()` to return 
+There are probably several ways to return an image when it is stored as a byte array in a database. Write a connection to a database and create an empty list to hold objects returned from the database. This part is standard for returning objects from a database, but we use a method called `GetBytes()` to return
 
     while (rdr.Read())
       {
@@ -143,7 +143,7 @@ There are probably several ways to return an image when it is stored as a byte a
         string type = rdr.GetString(5);
         var img  = rdr.GetBytes(6, 0L, buffer, 0, readLength);
 
-        Product newProduct = new Product(name, type, description, new byte[0], availability, price, id);
+        Product newProduct = new Product(name, type, description, buffer, availability, price, id);
         var base64File = Convert.ToBase64String(buffer);
         string photo = String.Format("data:image/gif;base64,{0}", base64File);
         newProduct.SetImageString(photo);
@@ -161,11 +161,39 @@ Lets break this down a bit:
   We set the buffer equal to null so that it can be used as a reference object. Arrays need to have a defined length, this makes retrieving objects that are different sizes a bit difficult so we use a method from the MySqlDataReader class called `GetBytes(int, long, byte[], int, int)` to measure the size of the image file. This method returns the numeric value of the number of bytes read. We use this value to set the size of the byte array we set to null, and finally we convert the return value from a `long` to an`int` datatype.  
   <sup>[_Read More about GetBytes()_](https://dev.mysql.com/doc/dev/connector-net/8.0/html/M_MySql_Data_MySqlClient_MySqlDataReader_GetBytes.htm)</sup>
 
-2. Our next move is to begin to read from our database. Again, we use the `GetBytes()` method, but instead setting the third value of the method to null like we did in the buffer, we set it to buffer and we set the last parameter to an integer that represents the length of the byte array:
+2. Our next move is to begin to read from our database. Again, we use the `GetBytes()` method, but instead setting the third parameter of the method to null like we did in the buffer, we set it to buffer. Finally we set the last parameter to an integer that represents the length of the byte array:
 
         var img  = rdr.GetBytes(6, 0L, buffer, 0, readLength);
 
+When the code evaluates this line it will look in column 6, begin to read from the 0th index of the column, identify the buffer to put the data into, identify where to begin reading in the buffer variable, and how many characters to read. This is a lot - but basically the take away is that this line of code directs data to a variable that is not the result of `rdr.GetBytes()`.
 
+3. After capturing the data into our byte array (called buffer), we create our object, just like we do whenever we query a database.
+
+        Product newProduct = new Product(name, type, description, buffer, availability, price, id);
+
+4. Next we need to convert our buffer (which is a byte[]) to a base64 string. Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format. We can use Base64 is used to encode binary files such as images within scripts, to avoid depending on external files, so in order to display our byte[] data we convert it to a base64:
+
+        var base64File = Convert.ToBase64String(buffer);  
+<sup>[Read More about Base64](https://en.wikipedia.org/wiki/Base64)</sup>
+
+5.  Now we convert our Base64 to a string that holds the value of our Base64 file. Essentially we use String.Format if we need to insert the value of an object, variable, or expression into another string:
+
+        string photo = String.Format("data:image/gif;base64,{0}", base64File);  
+
+      <sup>[Read More about String.Format()](https://docs.microsoft.com/en-us/dotnet/api/system.string.format?view=netframework-4.7.2#Starting)</sup>
+6. Finally we add our new string to a property of our object that is meant to hold an images string data:
+
+        newProduct.SetImageString(photo);  
+        allProducts.Add(newProduct);
 
 
 ---
+## Displaying Images on the DOM
+
+Now that we have successfully uploaded an image and converted it to a datatype that can be turned into an actual image, we have to display the image. This is very similar to how we would use an `img` tag and set the `src` attribute equal to a link. However, because our image is held as string data right now, all we need to do is set the`src` equal to the property holding the string data. Below is an example:
+
+  `<img src='@product.GetImageString()' alt='photo of @product.GetProductName()'>`
+
+  Notice how Razor is calling on the method `GetImageString()` which has been set to the string value of the byte array. This is how images display to the DOM.
+
+  Images can make it to the DOM by being passed into the view from the controller.
