@@ -2,21 +2,14 @@
 
 > Last updated: May 21st 2020
 
-
-
-Below are popular data structures that any programmer should be aware of.
+Systems described here might not meet the technical definition of a system. Bear with me as I continue to learn.
 
 | Name | Description |
 |---|---|
-| [Breadth First Search](./breadth_first_search.md) | |
-| [Depth First Search](./depth_first_search.md) | |
-| [Binary Search](./binary_search.md) | |
-| [Merge Sort](./merge_sort.md) | |
-| [Quick Sort](./quick_sort.md) | |
+| [OAuth Authentication Framework 2.0](./oauth/oauth.md) | These notes describe how this popular authentication protocol interacts with user-agents, servers, and third party authentication service providers. **Inspired by a bug encountered while working at Renew Financial**. |
 
 ___
 
 ### References for all Systems sources
 
-
-
+- Hardt, D. (2012, October). The OAuth 2.0 Authorization Framework. Retrieved from https://tools.ietf.org/html/rfc6749
