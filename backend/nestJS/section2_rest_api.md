@@ -9,6 +9,7 @@ The first step of creating the backend is making the REST API. Having clearly de
 | III. | [NestJS Controllers](#nestjs-controllers) |
 | IV. | [NestJS Services and Providers](#nestjs-services-and-providers) |
 | V. | [Retrieving Tasks](#retrieving-tasks) |
+| VI. | [NestJS Models](#nestjs-models) |
 
 ___
 
@@ -166,3 +167,48 @@ export class TasksService {
 ```
 
 Create the appropriate handlers and access the methods from within the service which correspond to the handler.
+
+The controller should only return business logic, or pass data from services to each other. This allows for clear separation of concerns by keeping business logic in the service files.
+
+___
+
+## NestJS Models
+
+Since NestJS suggests keeping all relevant files together, the model for each module should reside within the folder.
+
+Start with a Typescript interface.
+
+```Typescript
+export interface Task {
+ id: string;
+ title: string;
+ description: string
+ status: TaskStatus
+}
+
+export enum TaskStatus {
+ OPEN="OPEN",
+ IN_PROGRESS="IN_PROGRESS",
+ DONE="DONE",
+}
+```
+
+We can now apply these to TypeScript definitions throughout the module.
+
+### Update Service and Controller Files
+
+Basically anywhere that uses a model that is defined in our module needs to have the Typescript type definition attached to the variable name. Below is an example of how this is done:
+
+```TypeScript
+import { Injectable } from '@nextjs/common';
+import { Task } from './task.model';
+
+@Injectable()
+export class TaskService {
+ private tasks: Task[] = [];
+
+}
+```
+
+> Note the Typescript `private tasks: Task[]` typing.
+
