@@ -197,7 +197,7 @@ We can now apply these to TypeScript definitions throughout the module.
 
 ### Update Service and Controller Files
 
-Basically anywhere that uses a model that is defined in our module needs to have the Typescript type definition attached to the variable name. Below is an example of how this is done:
+Basically anywhere that uses a model that is defined in our module needs to have the Typescript type definition attached to the variable name. Below is an example of how this is done:  
 
 ```TypeScript
 import { Injectable } from '@nextjs/common';
@@ -212,3 +212,16 @@ export class TaskService {
 
 > Note the Typescript `private tasks: Task[]` typing.
 
+### Add a create method
+
+Obviously we need to create the methods which will allow us to get, create, update, and delete entries in our storage. Below is an example of how to create a TypeScript method in a service file:
+
+```TypeScript
+createTask(title: string, description: string) {
+ const task: Task = {
+ title,
+ description,
+ // ... other properties that can be found in the corresponding Model
+ }
+}
+```
