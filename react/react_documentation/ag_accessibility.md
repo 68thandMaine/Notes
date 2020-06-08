@@ -70,8 +70,24 @@ It is a good idea to inform users of any errors - that means screen readers also
 
 ## Focus Control
 
-Web applications should be fully operable via keyboard only.
+Web applications should be fully operable via keyboard only, and there are many ways that we can achieve this functionality. Here are a few rules to follow when manipulating focus:
 
+- Never remove the outline from an element which can have a focus applied unless you are replacing it with another focus implementation.
+- [Use Skiplinks or Skip Navigation Links](https://webaim.org/techniques/skipnav/). These links are hidden and only become visible when keyboard users interact with the page.
+- Programmatically manage focus. With React constantly modifying the HTML DOM, focus can be lost. To fix this we can use Refs to DOM elements.
+
+### Creating Refs for DOM Elements
+
+This is done by declaring a Ref in the JSX of a component class:
+
+```JSX
+class Example extends React.Component {
+	constructor(props) {
+		super(props);
+		this.textInput = React.createRef();
+	}
+}
+```
 ___
 
 ## References
