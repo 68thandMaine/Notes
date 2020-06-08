@@ -8,9 +8,8 @@ This is a repository that holds digital copies of the notes I take while develop
 | [Programming Concepts](programming_concepts/index.md) | [Systems](systems/index.md) |
 | [Data Structures](data_structures/index.md) | [Algorithms](algorithms/index.md) |
 | [Cracking the Coding Interview](cracking_the_coding_interview/index.md) | [Backend Stuff](backend/index.md) |
-)
-> Last updated: May 21st, 2020
 
+> Last updated: May 21st, 2020
 
 ## Master List of References
 
